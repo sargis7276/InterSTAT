@@ -90,6 +90,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
     private TextView imaginaryTexxtView;
     private TextView ourgoalsTV, theirGoalsTV;
     int goalsScored, goalsConceded;
+    int subMin;
 
     Vector<TextView> playersVector = new Vector<>();
     Vector<TextView> selectedLineup = new Vector<>();
@@ -486,6 +487,9 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @SuppressLint("SetTextI18n")
     public void resetButtonPress(View view){
+        goalsScored = 0;
+        goalsConceded = 0;
+        setPlayers();
         subFlag = false;
         startButton.setClickable(true);
         subButton.setVisibility(View.INVISIBLE);
@@ -541,6 +545,30 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
         setOnDragListerners();
     }
 
+    public void dialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        final EditText edittext = new EditText(this);
+        alert.setTitle("Substituion minute");
+
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                String EditTextValue = edittext.getText().toString();
+                subMin = Integer.parseInt(EditTextValue);
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // what ever you want to do with No option.
+            }
+        });
+
+        alert.show();
+    }
 
     public void startButtonPress(View view) {
 
@@ -582,6 +610,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
 
     public void subButtonPressed(View view){
 
+        dialog();
         subFlag = true;
 
         //enable players list to allow a substitution
@@ -792,6 +821,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                         lineupTextView.append(dropTarget.getText());
                         lineupTextView.append(" --> ");
                         lineupTextView.append("Yellow card");
+                        dropTarget.setTextColor(Color.YELLOW);
                         break;
                     }
                     else if (dropped.getId() == redTextView.getId())
@@ -888,10 +918,10 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
 
                         //update player stats for incoming player
                         incoming.gamesPlayed += 1;
-                        incoming.minutesPlayed = incoming.minutesPlayed + (15);
+                        incoming.minutesPlayed = 90 - subMin ;
 
                         //update player stats for outgoing player
-                        outgoing.minutesPlayed = outgoing.minutesPlayed - (15);
+                        outgoing.minutesPlayed = subMin;
 
                         //make it bold to highlight the fact that an item has been dropped
                         dropTarget.setTextColor(Color.WHITE);
@@ -907,6 +937,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                             i.setEnabled(false);
                         }
 
+                        subMin = 0;
                     }
 
                     break;
