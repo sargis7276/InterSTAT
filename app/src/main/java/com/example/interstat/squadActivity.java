@@ -1,9 +1,17 @@
-package com.example.interstat;
+/**
+ * On create opens the db then waits for endgame button press to add the date from players to the db
+ *
+ * Reset button reset everything before its gone to the db
+ * Player class for holding the information for each player in a vector before adding it to the DB
+ * setPlayers creates all the players with names and numbers,  and sets all other stats to 0s
+ *
+ * NOTE: when subbing, write sub minute before choosing the subs
+ * */
 
+package com.example.interstat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Context;
@@ -37,10 +45,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Vector;
-
-
 class Player{
-
     Player(int number, String name, int gamesPlayed, int minutesPlayed ,int goals, int assists, int yellows, int reds){
 
         this.number = number;
@@ -54,7 +59,6 @@ class Player{
         this.imagename = "";
 
     }
-
     int number;
     String name;
     int gamesPlayed;
@@ -67,11 +71,7 @@ class Player{
     ImageView image;
     String imagename;
     int res;
-
-
 }
-
-
 
 public class squadActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -127,10 +127,10 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
         Player Politano = new Player(16, "Matteo Politano", 0, 0, 0, 0, 0, 0);playersOBJVec.add(Politano);
         Player Candreva = new Player(87, "Antnio Candreva", 0, 0, 0, 0, 0, 0);playersOBJVec.add(Candreva);
 
+
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener1
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener1 = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -162,7 +162,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_squad);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+     //   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         BottomNavigationView navView = findViewById(R.id.nav_view1);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener1);
@@ -170,6 +170,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
         MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
         setPlayers();
+
 
         playerScrollView = findViewById(R.id.scrollView2);
         goalTextView = findViewById(R.id.textViewgoal);
@@ -184,8 +185,8 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
         imaginaryTexxtView = findViewById(R.id.ImaginarytextView);
         ourgoalsTV = findViewById(R.id.ourgoalstextView);
         theirGoalsTV = findViewById(R.id.theirgoalsTextView);
-        goalsScored = 0;
-        goalsConceded = 0;
+       // goalsScored = 0;
+       // goalsConceded = 0;
 
 
         //shows the lineup on the buttom of the field
@@ -193,8 +194,11 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
         lineupTextView = findViewById(R.id.lineupTextView);
         startButton = findViewById(R.id.startButton);
         subButton = findViewById(R.id.subButton);
-        subButton.setVisibility(View.INVISIBLE);
         endButton = findViewById(R.id.buttonEnd);
+
+        subButton.setVisibility(View.INVISIBLE);
+        endButton.setVisibility(View.INVISIBLE);
+
 
 
 
@@ -493,6 +497,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
         subFlag = false;
         startButton.setClickable(true);
         subButton.setVisibility(View.INVISIBLE);
+        endButton.setVisibility(View.INVISIBLE);
 
         goalTextView.setVisibility(View.INVISIBLE);
         yellowTextView.setVisibility(View.INVISIBLE);
@@ -574,6 +579,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
 
         subButton.setVisibility(View.VISIBLE);
         startButton.setClickable(false);
+        endButton.setVisibility(View.VISIBLE);
 
         goalTextView.setVisibility(View.VISIBLE);
         yellowTextView.setVisibility(View.VISIBLE);
@@ -685,10 +691,19 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
 
             // show score
             resetButtonPress(view);
-            ourgoalsTV.setText(String.valueOf(goalsScored));
-            theirGoalsTV.setText(String.valueOf(goalsConceded));
+
+            goalsConceded = playersOBJVec.get(0).goals;
+
+            for(int i = 1; i < playersOBJVec.size(); i++) {
+
+                goalsScored += playersOBJVec.get(i).goals;
+
+                }
+
             ourgoalsTV.setVisibility(View.VISIBLE);
             theirGoalsTV.setVisibility(View.VISIBLE);
+            ourgoalsTV.setText(String.valueOf(goalsScored));
+            theirGoalsTV.setText(String.valueOf(goalsConceded));
 
         }
         catch (Exception e) {
@@ -775,6 +790,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                     //view being dragged and dropped
                     TextView dropped = (TextView) view;
 
+
                     if(dropped.getId() == goalTextView.getId())
                     {
 
@@ -782,10 +798,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                         for(int i = 0; i < playersOBJVec.size(); i++) {
                             if(dropTarget.getText().toString().equals(playersOBJVec.get(i).name)){
                                 playersOBJVec.get(i).goals += 1;
-                                if(playersOBJVec.get(i).number == 1)
-                                    goalsConceded++;
-                                else
-                                    goalsScored++;
+                                break;
                             }
                         }
 
@@ -801,6 +814,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                         for(int i = 0; i < playersOBJVec.size(); i++) {
                             if(dropTarget.getText().toString().equals(playersOBJVec.get(i).name)){
                                 playersOBJVec.get(i).assists += 1;
+                                break;
                             }
                         }
                         lineupTextView.append("\n");
@@ -815,6 +829,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                         for(int i = 0; i < playersOBJVec.size(); i++) {
                             if(dropTarget.getText().toString().equals(playersOBJVec.get(i).name)){
                                 playersOBJVec.get(i).yellows += 1;
+                                break;
                             }
                         }
                         lineupTextView.append("\n");
@@ -830,6 +845,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                         for(int i = 0; i < playersOBJVec.size(); i++) {
                             if(dropTarget.getText().toString().equals(playersOBJVec.get(i).name)){
                                 playersOBJVec.get(i).reds += 1;
+                                break;
                             }
                         }
                         lineupTextView.append("\n");
@@ -855,7 +871,7 @@ public class squadActivity extends AppCompatActivity implements AdapterView.OnIt
                                 dropTarget.setText(playersOBJVec.get(i).name);
                                 playersOBJVec.get(i).gamesPlayed += 1;
                                 playersOBJVec.get(i).minutesPlayed += 90;
-
+                                break;
                             }
                         }
 

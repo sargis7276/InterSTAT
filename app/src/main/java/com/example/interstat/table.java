@@ -23,6 +23,16 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * This page shows stats of the players
+ * top tabs are switching the competition between Serie A UCL Coppa and the total
+ * Data is loaded from the database myDatabase
+ * Each competition is in a separate table named respectively (duh)
+ * UpdateDB method uses a cursor and quarries a db using the player number (already in the table) and fills the table row by row
+ * ClearDB drop the tables and sets all the values (strings) in the table to 0s
+ *
+ * */
+
 public class table extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener1
@@ -60,7 +70,7 @@ public class table extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+     //   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         BottomNavigationView navView = findViewById(R.id.nav_view3);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener1);
@@ -85,6 +95,8 @@ public class table extends AppCompatActivity {
             myDatabase = this.openOrCreateDatabase("players", MODE_PRIVATE, null);
             myDatabase.execSQL("CREATE TABLE IF NOT EXISTS seriea (number INTEGER(2) PRIMARY KEY, name VARCHAR, games INTEGER(3), minutes INTEGER(4),goals INTEGER(2), assists INTEGER(2), yellows INTEGER(2), reds INTEGER(2))");
 
+            //  String s1ql = "UPDATE seriea SET yellows = yellows + " + 1 + " WHERE number = " + 9;
+            //   myDatabase.execSQL(s1ql);
 
             //loop for rows
             for (int i = 1; i < 28; i++) {

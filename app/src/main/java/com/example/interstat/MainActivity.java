@@ -17,6 +17,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+/**
+ * Home page
+ * Still not sure what to do here
+ * League standings (Kinda hard)
+ * Inter Schedule (get the score after a game from squad activity)
+ *
+ * */
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -51,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+     //   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
